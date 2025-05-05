@@ -6,7 +6,6 @@ import { AadhaarUploadFields } from "../../../application/dto/AadhaarOCRDTO";
 export class OcrController {
   static async ocrFromAadhaarImages(req: Request, res: Response) {
     const files = req.files as AadhaarUploadFields;
-    console.log(files);
     const frontImage = files?.["adhaarFront"]?.[0];
     const backImage = files?.["adhaarBack"]?.[0];
 
@@ -21,6 +20,8 @@ export class OcrController {
       backImageBuffer: backImage.buffer,
     });
 
-    res.status(200).json(result);
+    res
+      .status(200)
+      .json({ status: true, data: result, message: "Parsing Successfull" });
   }
 }

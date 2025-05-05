@@ -13,7 +13,8 @@ export default function Button({
   fullWidth = true,
   type = "button",
 }: ButtonProps) {
-  const baseStyle = "font-medium py-2 px-4 rounded-lg transition duration-200 hover:cursor-pointer";
+  const baseStyle =
+    "font-medium py-2 px-4 mt-2 md:mt-0 rounded-lg transition duration-200 hover:cursor-pointer";
   const widthClass = fullWidth ? "w-full" : "";
   const variants: Record<string, string> = {
     primary: "bg-blue-600 hover:bg-blue-700 text-white",

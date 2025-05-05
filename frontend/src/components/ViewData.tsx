@@ -22,18 +22,28 @@ const ViewData = (props: ViewDataType) => {
         </h2>
 
         <div className="space-y-4">
-          {fields.map(({ label, key }) => (
-            <div key={label} className="border-b border-gray-200 pb-3">
-              <h3 className="text-sm font-medium text-gray-500">{label}</h3>
-              <p className="text-gray-900">{props.ocrData?.[key] ?? "--"}</p>
-            </div>
-          ))}
+          {fields.map(({ label, key }) => {
+            const value = props.ocrData?.[key];
+            const isError =
+              typeof value === "string" && value.includes("Unable");
+
+            return (
+              <div key={label} className="border-b border-gray-200 pb-3">
+                <h3 className="text-sm font-medium text-gray-500">{label}</h3>
+                <p className={isError ? `text-red-600` : `text-gray-900`}>
+                  {value ?? "--"}
+                </p>
+              </div>
+            );
+          })}
         </div>
 
         <div className="mt-6 md:flex justify-end space-x-3">
           <Button variant="success">Save Data</Button>
           <Button>Retrieve Data</Button>
-          <Button variant="secondary">Clear Data</Button>
+          <Button variant="secondary" onClick={props.handleClearData}>
+            Clear Data
+          </Button>
         </div>
       </div>
     </div>
