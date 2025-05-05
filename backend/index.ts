@@ -3,9 +3,14 @@ import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
 import ocrRoute from "./src/interfaces/http/routes/OcrRoute";
+import recordRoute from "./src/interfaces/http/routes/RecordRoutes";
+import { connectDatabase } from "./src/infrastructure/database/connection";
+import AppConfig from "./src/infrastructure/config/AppConfig";
 
 const app = express();
 dotenv.config();
+
+const PORT = AppConfig.port;
 
 app.use(
   cors({
@@ -14,12 +19,15 @@ app.use(
   })
 );
 
+app.use(express.json());
+
 app.use("/", ocrRoute);
+app.use("/", recordRoute);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const PORT = process.env.PORT;
+connectDatabase();
 
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);

@@ -39,7 +39,9 @@ const ViewData = (props: ViewDataType) => {
         </div>
 
         <div className="mt-6 md:flex justify-end space-x-3">
-          <Button variant="success">Save Data</Button>
+          <Button variant="success" onClick={props.handleModalOpen}>
+            Save Data
+          </Button>
           <Button>Retrieve Data</Button>
           <Button variant="secondary" onClick={props.handleClearData}>
             Clear Data

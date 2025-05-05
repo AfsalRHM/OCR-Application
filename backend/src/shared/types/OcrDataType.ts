@@ -6,8 +6,3 @@ export interface ocrDataType {
   address: string;
   pincode: string;
 }
-
-export interface saveDataType {
-  recordName: string;
-  password: string;
-}
