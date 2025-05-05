@@ -1,6 +1,7 @@
 import { IRecordRepository } from "../../../domain/repositories/IRecordRepository";
 import { Record } from "../../../domain/entities/Record";
 import RecordModel from "../models/RecordModel";
+import { ocrDataType } from "../../../shared/types/OcrDataType";
 
 export class RecordRepository implements IRecordRepository {
   async save(record: Record): Promise<Record> {
@@ -8,9 +9,14 @@ export class RecordRepository implements IRecordRepository {
     return record;
   }
 
-  async findByName(name: string): Promise<Record | null> {
-    const doc = await RecordModel.findOne({ name });
-    if (!doc) return null;
-    return new Record(doc.name, doc.password, doc.content);
+  async findByName(
+    name: string
+  ): Promise<{ password: string; content: ocrDataType } | null> {
+    const record = await RecordModel.findOne({ name });
+    if (!record) return null;
+    return {
+      password: record.password,
+      content: record.content,
+    };
   }
 }

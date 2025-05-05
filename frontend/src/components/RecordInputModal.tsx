@@ -5,10 +5,11 @@ import { SaveRecordModalProps } from "../interfaces/SaveRecordModal";
 import { SaveRecordValidation } from "../validations/SaveRecordValidation";
 import { showErrorToast } from "../utils/iziToastUtils";
 
-export default function SaveRecordModal({
+export default function RecordInputModal({
   isOpen,
   onClose,
   onSave,
+  type,
 }: SaveRecordModalProps) {
   const {
     register,
@@ -28,7 +29,6 @@ export default function SaveRecordModal({
       if (error.name === "ValidationError") {
         showErrorToast(error.message);
       } else {
-        console.log("Error occurred while Saving the Data");
         showErrorToast(error.message);
         console.log(error);
       }
@@ -47,7 +47,7 @@ export default function SaveRecordModal({
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold underline">
-            Save Aadhaar Record
+            {type == "save" ? "Save Aadhaar Record" : "Fetch Aadhaar Record"}
           </h2>
           <button onClick={onClose}>
             <X className="w-5 h-5 text-gray-500 hover:cursor-pointer" />
@@ -102,7 +102,7 @@ export default function SaveRecordModal({
               type="submit"
               className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white hover:cursor-pointer"
             >
-              Save
+              {type == "save" ? "Save" : "Find"}
             </button>
           </div>
         </form>

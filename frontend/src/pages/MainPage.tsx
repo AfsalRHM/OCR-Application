@@ -4,20 +4,25 @@ import ImageUpload from "../components/ImageUpload";
 import Button from "../components/Button";
 import ViewData from "../components/ViewData";
 
-import { fetchDataFromAadharPhotos, saveRecordData } from "../apis/api";
+import {
+  fetchDataFromAadharPhotos,
+  getRecordData,
+  saveRecordData,
+} from "../apis/api";
 import {
   showConfirmToast,
   showErrorToast,
   showSuccessToast,
 } from "../utils/iziToastUtils";
 import { ocrDataType, saveDataType } from "../interfaces/MainPage";
-import SaveRecordModal from "../components/SaveRecordModal";
+import RecordInputModal from "../components/RecordInputModal";
 
 export default function MainPage() {
   const [frontImageFile, setFrontImageFile] = useState<File | null>(null);
   const [backImageFile, setBackImageFile] = useState<File | null>(null);
 
   const [isSaveModalOpen, setSaveModalOpen] = useState(false);
+  const [isSearchModalOpen, setSearchModalOpen] = useState(false);
 
   const [ocrData, setOcrData] = useState<null | ocrDataType>(null);
 
@@ -103,6 +108,26 @@ export default function MainPage() {
     }
   };
 
+  const handleSearchData = async (data: saveDataType) => {
+    try {
+      const response = await getRecordData({
+        enteredName: data.recordName,
+        enteredPassword: data.password,
+      });
+
+      if (response.status == 200) {
+        showSuccessToast("Record Fetched Successfully");
+        setOcrData(response.data.content);
+      } else {
+        throw new Error("Error on the Backend");
+      }
+    } catch (error: any) {
+      console.log("Error occured while Fetching the Data");
+      showErrorToast(error.message);
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col min-h-screen bg-gray-50">
@@ -145,14 +170,23 @@ export default function MainPage() {
             ocrData={ocrData}
             handleClearData={handleClearData}
             handleModalOpen={() => setSaveModalOpen(true)}
+            handleSearchModalOpen={() => setSearchModalOpen(true)}
           />
         </main>
       </div>
 
-      <SaveRecordModal
+      <RecordInputModal
         isOpen={isSaveModalOpen}
         onClose={() => setSaveModalOpen(false)}
         onSave={handleSaveData}
+        type="save"
+      />
+
+      <RecordInputModal
+        isOpen={isSearchModalOpen}
+        onClose={() => setSearchModalOpen(false)}
+        onSave={handleSearchData}
+        type="search"
       />
     </>
   );
