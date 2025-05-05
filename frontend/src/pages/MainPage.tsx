@@ -1,28 +1,78 @@
 import { useState } from "react";
-import { Upload, FileText } from "lucide-react";
+import { Upload } from "lucide-react";
 import ImageUpload from "../components/ImageUpload";
 import Button from "../components/Button";
+import ViewData from "../components/ViewData";
+
+import { fetchDataFromAadharPhotos } from "../apis/api";
+import { showErrorToast } from "../utils/iziToastUtils";
+import { ocrDataType } from "../interfaces/MainPage";
 
 export default function MainPage() {
-  const [frontImage, setFrontImage] = useState<string | null>(null);
-  const [backImage, setBackImage] = useState<string | null>(null);
+  const [frontImageFile, setFrontImageFile] = useState<File | null>(null);
+  const [backImageFile, setBackImageFile] = useState<File | null>(null);
 
-  const handleFrontImageChange = (e: any) => {
-    if (e.target.files && e.target.files[0]) {
-      setFrontImage(URL.createObjectURL(e.target.files[0]));
+  const [ocrData, setOcrData] = useState<null | ocrDataType>(null);
+
+  const handleFrontImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.files, "this is the file");
+    const file = e.target.files?.[0];
+    console.log(file, "this is the file");
+    if (file) {
+      setFrontImageFile(file);
     }
   };
 
-  const handleBackImageChange = (e: any) => {
-    if (e.target.files && e.target.files[0]) {
-      setBackImage(URL.createObjectURL(e.target.files[0]));
+  const handleBackImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setBackImageFile(file);
+    }
+  };
+
+  const handleExtract = async () => {
+    try {
+      if (!frontImageFile && !backImageFile) {
+        showErrorToast("Both images are required");
+        return;
+      } else if (!frontImageFile) {
+        showErrorToast("Front image is required");
+        return;
+      } else if (!backImageFile) {
+        showErrorToast("Back image is required");
+        return;
+      }
+
+      const formData = new FormData();
+      console.log(frontImageFile, backImageFile);
+      formData.append("adhaarFront", frontImageFile);
+      formData.append("adhaarBack", backImageFile);
+
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
+
+      const response = await fetchDataFromAadharPhotos(formData);
+
+      if (response.status == 200) {
+        setOcrData(response.data);
+      } else {
+        throw new Error("Error on the Backend");
+      }
+
+      console.log(response);
+    } catch (error) {
+      console.log("Error occured while invoking the extract event");
+      console.log(error);
     }
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <header className="bg-blue-600 text-white p-4 flex justify-center">
-        <h1 className="text-2xl font-bold underline">Aadhar Card OCR Extractor</h1>
+        <h1 className="text-2xl font-bold underline">
+          Aadhar Card OCR Extractor
+        </h1>
       </header>
 
       <main className="flex flex-col md:flex-row flex-1">
@@ -36,52 +86,25 @@ export default function MainPage() {
             <div className="space-y-6">
               <ImageUpload
                 label="Front Side of Aadhar Card"
-                image={frontImage}
+                image={frontImageFile}
                 onChange={handleFrontImageChange}
-                onRemove={() => setFrontImage(null)}
+                onRemove={() => setFrontImageFile(null)}
               />
               <ImageUpload
                 label="Back Side of Aadhar Card"
-                image={backImage}
+                image={backImageFile}
                 onChange={handleBackImageChange}
-                onRemove={() => setBackImage(null)}
+                onRemove={() => setBackImageFile(null)}
               />
 
-              <Button>Extract Aadhar Information</Button>
+              <Button onClick={handleExtract}>
+                Extract Aadhar Information
+              </Button>
             </div>
           </div>
         </div>
 
-        <div className="w-full md:w-1/2 p-6">
-          <div className="bg-white rounded-lg shadow-md p-6 h-full">
-            <h2 className="text-xl font-semibold mb-6 flex items-center">
-              <FileText className="mr-2" size={20} />
-              Extracted Aadhar Information
-            </h2>
-
-            <div className="space-y-4">
-              {[
-                "Name",
-                "Aadhar Number",
-                "Date of Birth",
-                "Gender",
-                "Address",
-                "Pincode",
-              ].map((label) => (
-                <div key={label} className="border-b border-gray-200 pb-3">
-                  <h3 className="text-sm font-medium text-gray-500">{label}</h3>
-                  <p className="text-gray-900">--</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 md:flex justify-end space-x-3">
-              <Button variant="success">Save Data</Button>
-              <Button>Retrieve Data</Button>
-              <Button variant="secondary">Clear Data</Button>
-            </div>
-          </div>
-        </div>
+        <ViewData ocrData={ocrData} />
       </main>
     </div>
   );

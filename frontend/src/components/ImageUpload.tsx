@@ -2,7 +2,7 @@ import { Upload } from "lucide-react";
 
 interface ImageUploadProps {
   label: string;
-  image: string | null;
+  image: File | null;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemove: () => void;
 }
@@ -13,6 +13,10 @@ export default function ImageUpload({
   onChange,
   onRemove,
 }: ImageUploadProps) {
+  const convertToUrl = (image: File) => {
+    return URL.createObjectURL(image);
+  };
+
   return (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -22,7 +26,7 @@ export default function ImageUpload({
         {image ? (
           <div className="relative">
             <img
-              src={image}
+              src={convertToUrl(image)}
               alt={label}
               className="max-h-48 mx-auto object-contain"
             />
