@@ -7,6 +7,9 @@ import recordRoute from "./src/interfaces/http/routes/RecordRoutes";
 import { connectDatabase } from "./src/infrastructure/database/connection";
 import AppConfig from "./src/infrastructure/config/AppConfig";
 
+import path from "path";
+import fs from "fs";
+
 const app = express();
 dotenv.config();
 
@@ -18,6 +21,12 @@ app.use(
     credentials: true,
   })
 );
+
+if (process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON) {
+  const credPath = path.join(__dirname, "google-credentials.json");
+  fs.writeFileSync(credPath, process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
+  process.env.GOOGLE_APPLICATION_CREDENTIALS = credPath;
+}
 
 app.use(express.json());
 

@@ -27,7 +27,6 @@ export const saveRecordController = async (req: Request, res: Response) => {
 export const getRecordHandler = async (req: Request, res: Response) => {
   try {
     const { enteredName, enteredPassword } = req.body;
-    console.log(enteredName, enteredPassword, "This are the entered data from the frontend-----------------------")
     const result = await getRecordUseCase.execute({
       name: enteredName,
       password: enteredPassword,
