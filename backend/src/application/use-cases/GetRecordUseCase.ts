@@ -11,7 +11,7 @@ export class GetRecordUseCase {
       throw new Error("Record not found");
     }
 
-    const isMatch = comparePassword({
+    const isMatch = await comparePassword({
       enteredPassword: request.password,
       recordPassword: record.password,
     });

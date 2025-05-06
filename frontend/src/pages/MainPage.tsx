@@ -123,7 +123,11 @@ export default function MainPage() {
       }
     } catch (error: any) {
       console.log("Error occured while Fetching the Data");
-      showErrorToast(error.message);
+      if (error.response.data.message) {
+        showErrorToast(error.response.data.message);
+      } else {
+        showErrorToast(error.message);
+      }
       console.log(error);
     }
   };
