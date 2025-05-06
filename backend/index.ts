@@ -17,7 +17,7 @@ const PORT = AppConfig.port;
 
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", "https://aadhaar-ocr-application.vercel.app"],
     credentials: true,
   })
 );
@@ -39,5 +39,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 connectDatabase();
 
 app.listen(PORT, () => {
+  console.log(PORT);
   console.log(`Server listening on http://localhost:${PORT}`);
 });
