@@ -13,6 +13,7 @@ import fs from "fs";
 const app = express();
 dotenv.config();
 
+console.log(process.env.PORT, "This is the port")
 const PORT = process.env.PORT || AppConfig.port;
 
 app.use(
@@ -39,6 +40,5 @@ app.use(bodyParser.urlencoded({ extended: true }));
 connectDatabase();
 
 app.listen(PORT, () => {
-  console.log(PORT);
   console.log(`Server listening on http://localhost:${PORT}`);
 });
