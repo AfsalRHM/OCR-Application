@@ -13,7 +13,7 @@ import fs from "fs";
 const app = express();
 dotenv.config();
 
-const PORT = AppConfig.port;
+const PORT = process.env.PORT || AppConfig.port;
 
 app.use(
   cors({
