@@ -10,6 +10,8 @@ const getRecordUseCase = new GetRecordUseCase(repository);
 export const saveRecordController = async (req: Request, res: Response) => {
   try {
     const { recordName, recordPassword, recordData } = req.body;
+    console.log("Hello is here working and fine");
+    
     const result = await saveRecordUseCase.execute({
       name: recordName,
       password: recordPassword,
