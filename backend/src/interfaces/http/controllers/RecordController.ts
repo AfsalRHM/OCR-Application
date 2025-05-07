@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { SaveRecordUseCase } from "../../../application/use-cases/SaveRecordUseCase";
 import { RecordRepository } from "../../../infrastructure/database/repositories/RecordRepository";
 import { GetRecordUseCase } from "../../../application/use-cases/GetRecordUseCase";
+import { statusCode } from "../../../shared/constants/StatusCodes";
 
 const repository = new RecordRepository();
 const saveRecordUseCase = new SaveRecordUseCase(repository);
@@ -17,12 +18,12 @@ export const saveRecordController = async (req: Request, res: Response) => {
       password: recordPassword,
       content: recordData,
     });
-    res.status(200).json({
+    res.status(statusCode.OK).json({
       status: true,
       result,
     });
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    res.status(statusCode.INTERNAL_SERVER_ERROR).json({ message: error.message });
   }
 };
 
@@ -33,8 +34,8 @@ export const getRecordHandler = async (req: Request, res: Response) => {
       name: enteredName,
       password: enteredPassword,
     });
-    res.status(200).json({ status: true, content: result.content });
+    res.status(statusCode.OK).json({ status: true, content: result.content });
   } catch (error: any) {
-    res.status(400).json({ status: false, message: error.message });
+    res.status(statusCode.BAD_REQUEST).json({ status: false, message: error.message });
   }
 };

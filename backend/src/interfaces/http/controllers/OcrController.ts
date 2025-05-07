@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { AadhaarOCRUseCase } from "../../../application/use-cases/AadhaarOCRUseCase";
 import { OcrService } from "../../../infrastructure/services/OcrService";
 import { AadhaarUploadFields } from "../../../application/dto/AadhaarOCRDTO";
+import { statusCode } from "../../../shared/constants/StatusCodes";
 
 export class OcrController {
   static async ocrFromAadhaarImages(req: Request, res: Response) {
@@ -21,7 +22,7 @@ export class OcrController {
     });
 
     res
-      .status(200)
+      .status(statusCode.OK)
       .json({ status: true, data: result, message: "Parsing Successfull" });
   }
 }
