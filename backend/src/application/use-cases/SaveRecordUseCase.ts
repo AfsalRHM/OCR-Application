@@ -14,7 +14,9 @@ export class SaveRecordUseCase {
     const nameAlreadyExists = await this.recordRepository.existsByName(
       data.name
     );
+    console.log('THis is the working', nameAlreadyExists);
     if (nameAlreadyExists) {
+      console.log('Error is throwing')
       throw new Error("Record with this name already exists.");
     }
 
