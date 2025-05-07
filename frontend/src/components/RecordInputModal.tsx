@@ -22,9 +22,11 @@ export default function RecordInputModal({
     try {
       await SaveRecordValidation.validate(data);
 
-      onSave(data);
-      reset();
-      onClose();
+      const response: boolean = await onSave(data);
+      if (response) {
+        reset();
+        onClose();
+      }
     } catch (error: any) {
       if (error.name === "ValidationError") {
         showErrorToast(error.message);

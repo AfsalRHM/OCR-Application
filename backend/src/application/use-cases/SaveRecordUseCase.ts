@@ -11,6 +11,13 @@ export class SaveRecordUseCase {
   constructor(private recordRepository: IRecordRepository) {}
 
   async execute(data: SaveRecordRequestDTO): Promise<SaveRecordResponseDTO> {
+    const nameAlreadyExists = await this.recordRepository.existsByName(
+      data.name
+    );
+    if (nameAlreadyExists) {
+      throw new Error("Record with this name already exists.");
+    }
+
     const hashedPassword = hashPassword(data.password);
     const record = new Record(data.name, hashedPassword, data.content);
     await this.recordRepository.save(record);

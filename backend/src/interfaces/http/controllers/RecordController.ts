@@ -19,8 +19,8 @@ export const saveRecordController = async (req: Request, res: Response) => {
       status: true,
       result,
     });
-  } catch (error) {
-    res.status(500).json({ message: "Something went wrong", error });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
   }
 };
 

@@ -19,4 +19,9 @@ export class RecordRepository implements IRecordRepository {
       content: record.content,
     };
   }
+
+  async existsByName(name: string): Promise<boolean> {
+    const exists = await RecordModel.exists({ name });
+    return !!exists;
+  }
 }

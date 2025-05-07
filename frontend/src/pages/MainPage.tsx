@@ -87,7 +87,7 @@ export default function MainPage() {
     try {
       if (!ocrData) {
         showErrorToast("No Extracted data available...");
-        return;
+        return false;
       }
 
       const response = await saveRecordData({
@@ -98,13 +98,19 @@ export default function MainPage() {
 
       if (response.status == 200) {
         showSuccessToast("Record saved Successfully");
+        return true;
       } else {
         throw new Error("Error on the Backend");
       }
     } catch (error: any) {
       console.log("Error occured while Saving the Data");
-      showErrorToast(error.message);
+      if (error.response.data.message) {
+        showErrorToast(error.response.data.message);
+      } else {
+        showErrorToast(error.message);
+      }
       console.log(error);
+      return false;
     }
   };
 
@@ -118,6 +124,7 @@ export default function MainPage() {
       if (response.status == 200) {
         showSuccessToast("Record Fetched Successfully");
         setOcrData(response.data.content);
+        return true;
       } else {
         throw new Error("Error on the Backend");
       }
@@ -129,6 +136,7 @@ export default function MainPage() {
         showErrorToast(error.message);
       }
       console.log(error);
+      return false;
     }
   };
 
