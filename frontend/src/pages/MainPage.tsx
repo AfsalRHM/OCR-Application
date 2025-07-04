@@ -26,6 +26,8 @@ export default function MainPage() {
 
   const [ocrData, setOcrData] = useState<null | ocrDataType>(null);
 
+  const [loading, setLoading] = useState<Boolean>(false);
+
   const handleFrontImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -57,6 +59,8 @@ export default function MainPage() {
       formData.append("adhaarFront", frontImageFile);
       formData.append("adhaarBack", backImageFile);
 
+      setLoading(true);
+
       const response = await fetchDataFromAadharPhotos(formData);
 
       if (response.status == 200) {
@@ -72,6 +76,8 @@ export default function MainPage() {
         showErrorToast(error.message);
       }
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -176,7 +182,7 @@ export default function MainPage() {
                 />
 
                 <Button onClick={handleExtract}>
-                  Extract Aadhar Information
+                  {!loading ? "Extract Aadhar Information" : "Extracting..."}
                 </Button>
               </div>
             </div>
