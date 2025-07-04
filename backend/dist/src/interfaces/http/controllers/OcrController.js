@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.OcrController = void 0;
 const AadhaarOCRUseCase_1 = require("../../../application/use-cases/AadhaarOCRUseCase");
 const OcrService_1 = require("../../../infrastructure/services/OcrService");
+const StatusCodes_1 = require("../../../shared/constants/StatusCodes");
 class OcrController {
     static ocrFromAadhaarImages(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -28,9 +29,16 @@ class OcrController {
                 frontImageBuffer: frontImage.buffer,
                 backImageBuffer: backImage.buffer,
             });
-            res
-                .status(200)
-                .json({ status: true, data: result, message: "Parsing Successfull" });
+            if ("message" in result && result.message === "Invalid Image") {
+                res
+                    .status(StatusCodes_1.statusCode.BAD_REQUEST)
+                    .json({ status: false, message: result.message });
+            }
+            else {
+                res
+                    .status(StatusCodes_1.statusCode.OK)
+                    .json({ status: true, data: result, message: "Parsing Successful" });
+            }
         });
     }
 }

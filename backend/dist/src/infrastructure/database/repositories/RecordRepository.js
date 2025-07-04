@@ -32,5 +32,11 @@ class RecordRepository {
             };
         });
     }
+    existsByName(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const exists = yield RecordModel_1.default.exists({ name });
+            return !!exists;
+        });
+    }
 }
 exports.RecordRepository = RecordRepository;

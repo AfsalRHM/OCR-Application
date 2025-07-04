@@ -8,8 +8,8 @@ export class OcrService implements IocrService {
   async processImages(
     frontImageBuffer: Buffer,
     backImageBuffer: Buffer
-  ): Promise<AadhaarOCRResponseDTO> {
-    // Using sharp to 
+  ): Promise<AadhaarOCRResponseDTO | { message: string }> {
+    // Using sharp to
     const frontImage = await preprocessImage(frontImageBuffer);
     const backImage = await preprocessImage(backImageBuffer);
 
@@ -19,6 +19,13 @@ export class OcrService implements IocrService {
 
     const frontData = parseAadhaarOCRData(frontText);
     const backData = parseAadhaarOCRData(backText);
+
+    if (
+      !frontData.aadhaarNumber ||
+      !backText.includes("Unique Identification Authority of India")
+    ) {
+      return { message: "Invalid Image" };
+    }
 
     const ocrResult = {
       name: frontData.name,

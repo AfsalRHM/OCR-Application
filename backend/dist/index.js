@@ -15,7 +15,6 @@ const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const app = (0, express_1.default)();
 dotenv_1.default.config();
-console.log(process.env.PORT, "This is the port");
 const PORT = process.env.PORT || AppConfig_1.default.port;
 app.use((0, cors_1.default)({
     origin: ["http://localhost:5173", "https://aadhaar-ocr-application.vercel.app"],

@@ -19,6 +19,7 @@ export default function ImageUpload({
 
   return (
     <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center relative">
+      <h5>{label}</h5>
       {image ? (
         <div className="relative">
           <img

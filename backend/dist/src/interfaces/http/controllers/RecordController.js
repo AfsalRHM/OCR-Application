@@ -13,24 +13,26 @@ exports.getRecordHandler = exports.saveRecordController = void 0;
 const SaveRecordUseCase_1 = require("../../../application/use-cases/SaveRecordUseCase");
 const RecordRepository_1 = require("../../../infrastructure/database/repositories/RecordRepository");
 const GetRecordUseCase_1 = require("../../../application/use-cases/GetRecordUseCase");
+const StatusCodes_1 = require("../../../shared/constants/StatusCodes");
 const repository = new RecordRepository_1.RecordRepository();
 const saveRecordUseCase = new SaveRecordUseCase_1.SaveRecordUseCase(repository);
 const getRecordUseCase = new GetRecordUseCase_1.GetRecordUseCase(repository);
 const saveRecordController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { recordName, recordPassword, recordData } = req.body;
+        console.log("Hello is here working and fine");
         const result = yield saveRecordUseCase.execute({
             name: recordName,
             password: recordPassword,
             content: recordData,
         });
-        res.status(200).json({
+        res.status(StatusCodes_1.statusCode.OK).json({
             status: true,
             result,
         });
     }
     catch (error) {
-        res.status(500).json({ message: "Something went wrong", error });
+        res.status(StatusCodes_1.statusCode.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }
 });
 exports.saveRecordController = saveRecordController;
@@ -41,10 +43,10 @@ const getRecordHandler = (req, res) => __awaiter(void 0, void 0, void 0, functio
             name: enteredName,
             password: enteredPassword,
         });
-        res.status(200).json({ status: true, content: result.content });
+        res.status(StatusCodes_1.statusCode.OK).json({ status: true, content: result.content });
     }
     catch (error) {
-        res.status(400).json({ status: false, message: error.message });
+        res.status(StatusCodes_1.statusCode.BAD_REQUEST).json({ status: false, message: error.message });
     }
 });
 exports.getRecordHandler = getRecordHandler;

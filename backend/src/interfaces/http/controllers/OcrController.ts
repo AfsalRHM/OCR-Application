@@ -21,8 +21,14 @@ export class OcrController {
       backImageBuffer: backImage.buffer,
     });
 
-    res
-      .status(statusCode.OK)
-      .json({ status: true, data: result, message: "Parsing Successfull" });
+    if ("message" in result && result.message === "Invalid Image") {
+      res
+        .status(statusCode.BAD_REQUEST)
+        .json({ status: false, message: result.message });
+    } else {
+      res
+        .status(statusCode.OK)
+        .json({ status: true, data: result, message: "Parsing Successful" });
+    }
   }
 }

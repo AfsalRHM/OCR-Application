@@ -16,7 +16,7 @@ const GoogleVisionService_1 = require("./GoogleVisionService");
 class OcrService {
     processImages(frontImageBuffer, backImageBuffer) {
         return __awaiter(this, void 0, void 0, function* () {
-            // Using sharp to 
+            // Using sharp to
             const frontImage = yield (0, SharpProcessor_1.preprocessImage)(frontImageBuffer);
             const backImage = yield (0, SharpProcessor_1.preprocessImage)(backImageBuffer);
             // Extract OCR text
@@ -24,6 +24,10 @@ class OcrService {
             const backText = yield (0, GoogleVisionService_1.extractTextFromGoogleVision)(backImage);
             const frontData = (0, AadhaarOCRParser_1.parseAadhaarOCRData)(frontText);
             const backData = (0, AadhaarOCRParser_1.parseAadhaarOCRData)(backText);
+            if (!frontData.aadhaarNumber ||
+                !backText.includes("Unique Identification Authority of India")) {
+                return { message: "Invalid Image" };
+            }
             const ocrResult = {
                 name: frontData.name,
                 dob: frontData.dob,

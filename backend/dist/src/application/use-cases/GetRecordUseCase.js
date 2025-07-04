@@ -21,7 +21,7 @@ class GetRecordUseCase {
             if (!record) {
                 throw new Error("Record not found");
             }
-            const isMatch = (0, ComparePassword_1.comparePassword)({
+            const isMatch = yield (0, ComparePassword_1.comparePassword)({
                 enteredPassword: request.password,
                 recordPassword: record.password,
             });

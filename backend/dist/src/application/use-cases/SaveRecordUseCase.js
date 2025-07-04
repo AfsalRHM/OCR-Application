@@ -18,6 +18,12 @@ class SaveRecordUseCase {
     }
     execute(data) {
         return __awaiter(this, void 0, void 0, function* () {
+            const nameAlreadyExists = yield this.recordRepository.existsByName(data.name);
+            console.log('THis is the working', nameAlreadyExists);
+            if (nameAlreadyExists) {
+                console.log('Error is throwing');
+                throw new Error("Record with this name already exists.");
+            }
             const hashedPassword = (0, HashPassword_1.hashPassword)(data.password);
             const record = new Record_1.Record(data.name, hashedPassword, data.content);
             yield this.recordRepository.save(record);
